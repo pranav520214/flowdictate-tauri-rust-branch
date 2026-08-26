@@ -1,0 +1,18 @@
+[package]
+name = "flowdictate-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core pipeline orchestrator for FlowDictate"
+
+[dependencies]
+flowdictate-audio = { path = "../flowdictate-audio" }
+flowdictate-asr = { path = "../flowdictate-asr" }
+flowdictate-refine = { path = "../flowdictate-refine" }
+flowdictate-inject = { path = "../flowdictate-inject" }
+flowdictate-storage = { path = "../flowdictate-storage" }
+flowdictate-security = { path = "../flowdictate-security" }
+crossbeam-channel.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true

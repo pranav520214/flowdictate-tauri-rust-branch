@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "models": [
+    {
+      "id": "whisper-tiny-q5_1",
+      "architecture": "whisper",
+      "variant": "tiny",
+      "multilingual": true,
+      "quantization": "q5_1",
+      "parameters": "39M",
+      "sha256": "TO_BE_FILLED_WITH_ACTUAL_HASH",
+      "file_size_bytes": 32505856,
+      "filename": "ggml-tiny.bin",
+      "runtime": "whisper.cpp",
+      "runtime_version_min": "1.5.0"
+    },
+    {
+      "id": "whisper-base-q5_1",
+      "architecture": "whisper",
+      "variant": "base",
+      "multilingual": true,
+      "quantization": "q5_1",
+      "parameters": "74M",
+      "sha256": "TO_BE_FILLED_WITH_ACTUAL_HASH",
+      "file_size_bytes": 59736064,
+      "filename": "ggml-base.bin",
+      "runtime": "whisper.cpp",
+      "runtime_version_min": "1.5.0"
+    },
+    {
+      "id": "qwen2.5-0.5b-instruct-q4_k_m",
+      "architecture": "qwen2",
+      "variant": "0.5B-Instruct",
+      "multilingual": true,
+      "quantization": "Q4_K_M",
+      "parameters": "490M",
+      "sha256": "TO_BE_FILLED_WITH_ACTUAL_HASH",
+      "file_size_bytes": 417333248,
+      "filename": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "runtime": "llama.cpp",
+      "runtime_version_min": "b3000"
+    }
+  ]
+}

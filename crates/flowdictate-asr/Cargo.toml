@@ -1,0 +1,13 @@
+[package]
+name = "flowdictate-asr"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Streaming ASR engine for FlowDictate using whisper.cpp"
+
+[dependencies]
+whisper-rs.workspace = true
+flowdictate-security = { path = "../flowdictate-security" }
+flowdictate-audio = { path = "../flowdictate-audio" }
+thiserror.workspace = true
+tracing.workspace = true

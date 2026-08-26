@@ -1,0 +1,21 @@
+[package]
+name = "flowdictate"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "FlowDictate — Privacy-First Local Voice Computing"
+
+[build-dependencies]
+tauri-build.workspace = true
+
+[dependencies]
+tauri.workspace = true
+flowdictate-core = { path = "../crates/flowdictate-core" }
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

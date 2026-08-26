@@ -1,0 +1,12 @@
+[package]
+name = "flowdictate-inject"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Global hotkey, text injection, and application context for FlowDictate"
+
+[dependencies]
+enigo.workspace = true
+global-hotkey.workspace = true
+thiserror.workspace = true
+tracing.workspace = true

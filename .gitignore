@@ -1,0 +1,41 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# Tauri build output
+/src-tauri/target/
+
+# Model files (large, downloaded separately)
+/models/*.bin
+/models/*.gguf
+!/models/manifest.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment
+.env
+.env.local
+
+# Node (if ever used for UI tooling)
+node_modules/
+
+# Test artifacts
+/tests/fixtures/generated/
+
+# Sensitive data that must never be committed
+*.db
+*.db-journal
+*.db-wal
+*.key
+*.pem
