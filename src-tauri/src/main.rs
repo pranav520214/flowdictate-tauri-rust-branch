@@ -20,24 +20,24 @@
 
 mod commands;
 mod state;
+mod setup;
+
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 fn main() {
-    // Initialize logging with security-safe filter
-    // Release builds: info level, no sensitive fields
-    // Debug builds: debug level with additional diagnostics
-    let log_filter = if cfg!(debug_assertions) {
-        "flowdictate=debug"
-    } else {
-        "flowdictate=info"
-    };
-
-    tracing_subscriber::fmt()
-        .with_env_filter(log_filter)
+    // Initialize secure logging (no transcripts)
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::EnvFilter::new(
+            std::env::var("RUST_LOG").unwrap_or_else(|_| "info".into()),
+        ))
+        .with(tracing_subscriber::fmt::layer())
         .init();
 
-    tracing::info!("FlowDictate starting");
-
     tauri::Builder::default()
+        .setup(|app| {
+            setup::run_setup(app)?;
+            Ok(())
+        })
         .manage(state::AppState::default())
         .invoke_handler(tauri::generate_handler![
             commands::get_status,

@@ -36,14 +36,19 @@ const ctx = waveformCanvas.getContext('2d');
  * Update the UI state.
  * @param {string} newState - One of STATES values
  * @param {string} [transcript] - Optional partial transcript text
+ * @param {string} [textState='raw'] - 'raw', 'purifying', or 'purified'
  */
-function setState(newState, transcript) {
+function setState(newState, transcript, textState = 'raw') {
     currentState = newState;
     overlay.dataset.state = newState;
     stateLabel.textContent = STATE_LABELS[newState] || 'Ready';
 
     if (transcript !== undefined) {
         transcriptEl.textContent = transcript;
+        transcriptEl.className = 'transcript';
+        if (textState === 'raw') transcriptEl.classList.add('text-raw');
+        else if (textState === 'purifying') transcriptEl.classList.add('text-purifying');
+        else if (textState === 'purified') transcriptEl.classList.add('text-purified');
     }
 }
 

@@ -41,31 +41,31 @@ hex = "0.4"
 crossbeam-channel = "0.5"
 
 # Audio
-cpal = "0.15"
-ringbuf = "0.4"
-rubato = "0.16"
-hound = "3.5"
+cpal = "0.15.3"
+ringbuf = "0.4.4"
+rubato = "0.16.1"
+hound = "3.5.1"
 
 # VAD
-webrtc-vad = "0.4"
+webrtc-vad = "0.4.0"
 
 # ASR — whisper.cpp bindings
-whisper-rs = "0.13"
+whisper-rs = "0.16.0"
 
 # LLM refinement — llama.cpp bindings (optional)
-llama-cpp-2 = "0.1"
+llama-cpp-2 = "0.1.154"
 
 # Database — SQLCipher encrypted SQLite
-rusqlite = { version = "0.32", features = ["bundled-sqlcipher-vendored-openssl"] }
+rusqlite = { version = "0.32.1", features = ["bundled-sqlcipher-vendored-openssl"] }
 
 # OS credential storage
-keyring = { version = "3", features = ["apple-native", "windows-native", "sync-secret-service"] }
+keyring = { version = "3.3.0", features = ["apple-native", "windows-native", "sync-secret-service"] }
 
 # Text injection
-enigo = "0.2"
+enigo = "0.3.0"
 
 # Global hotkey
-global-hotkey = "0.6"
+global-hotkey = "0.6.1"
 
 # Tauri v2
 tauri = { version = "2", features = [] }
