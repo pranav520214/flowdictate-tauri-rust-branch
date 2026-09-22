@@ -1,0 +1,19 @@
+[package]
+name = "flowdictate-asr"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Streaming ASR interface for FlowDictate (NeMo-Speech.cpp / Nemotron)"
+
+[dependencies]
+flowdictate-security = { path = "../flowdictate-security" }
+thiserror.workspace = true
+tracing.workspace = true
+crossbeam-channel.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+# NOTE: This crate defines the abstract Recognizer trait and IPC client.
+# The actual NeMo-Speech.cpp FFI lives in the ASR worker binary,
+# not in this library crate. This maintains trust boundary separation
+# per spec §4 and §5.

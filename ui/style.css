@@ -1,0 +1,113 @@
+/* FlowDictate Overlay Styles
+ *
+ * Design principles:
+ * - Lightweight: only transform and opacity for animations
+ * - No blur, heavy shadows, or expensive filters
+ * - Usable on integrated graphics
+ * - Dark theme, minimal footprint
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.overlay {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(24, 24, 27, 0.92);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e4e4e7;
+    font-size: 13px;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* State indicator */
+.state-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.state-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #71717a;
+    transition: background-color 0.2s ease;
+}
+
+.state-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #a1a1aa;
+    min-width: 60px;
+}
+
+/* State-specific colors */
+[data-state="idle"] .state-dot { background: #71717a; }
+[data-state="listening"] .state-dot { background: #22c55e; }
+[data-state="processing"] .state-dot { background: #f59e0b; }
+[data-state="success"] .state-dot { background: #3b82f6; }
+[data-state="warning"] .state-dot { background: #ef4444; }
+[data-state="security"] .state-dot { background: #ef4444; }
+
+/* Waveform canvas */
+.waveform {
+    flex-shrink: 0;
+    opacity: 0.3;
+    transition: opacity 0.2s ease;
+}
+
+[data-state="listening"] .waveform { opacity: 1; }
+[data-state="processing"] .waveform { opacity: 0.5; }
+
+/* Partial transcript */
+.transcript {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #e2e8f0;
+    transition: all 0.3s ease;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-raw {
+    color: #94a3b8;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.text-purifying {
+    color: #cbd5e1;
+    animation: pulse 1.5s infinite;
+}
+
+.text-purified {
+    color: #ffffff;
+    font-weight: 500;
+    text-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1.0; }
+    100% { opacity: 0.7; }
+}

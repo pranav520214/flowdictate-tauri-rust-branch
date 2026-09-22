@@ -1,0 +1,25 @@
+[package]
+name = "flowdictate"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "FlowDictate — Privacy-First Local Voice Computing"
+
+[build-dependencies]
+tauri-build.workspace = true
+
+[dependencies]
+tauri.workspace = true
+flowdictate-core = { path = "../crates/flowdictate-core" }
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+# NOTE: No HTTP client (reqwest, hyper, curl) is present in this crate.
+# NOTE: No async runtime (tokio) is present — Tauri manages its own.
+# NOTE: No network capability exists in the dictation pipeline.

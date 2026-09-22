@@ -1,0 +1,17 @@
+[package]
+name = "flowdictate-audio"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Audio capture, ring buffer, resampling, and VAD for FlowDictate"
+
+[dependencies]
+cpal.workspace = true
+ringbuf.workspace = true
+rubato.workspace = true
+webrtc-vad.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+hound.workspace = true

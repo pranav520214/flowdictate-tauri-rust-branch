@@ -1,0 +1,16 @@
+[package]
+name = "flowdictate-storage"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Encrypted storage, OS credentials, and history for FlowDictate"
+
+[dependencies]
+rusqlite.workspace = true
+keyring.workspace = true
+zeroize.workspace = true
+flowdictate-security = { path = "../flowdictate-security" }
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true
+serde_json.workspace = true

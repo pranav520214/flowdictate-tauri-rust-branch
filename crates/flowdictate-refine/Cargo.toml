@@ -1,0 +1,13 @@
+[package]
+name = "flowdictate-refine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Text refinement pipeline for FlowDictate: deterministic cleanup + optional local LLM"
+
+[dependencies]
+flowdictate-security = { path = "../flowdictate-security" }
+flowdictate-runtime = { path = "../flowdictate-runtime" }
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true

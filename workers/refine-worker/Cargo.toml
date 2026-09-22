@@ -1,0 +1,14 @@
+[package]
+name = "refine-worker"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Isolated llama.cpp worker process for FlowDictate text refinement"
+
+[dependencies]
+flowdictate-runtime = { path = "../../crates/flowdictate-runtime" }
+flowdictate-security = { path = "../../crates/flowdictate-security" }
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true
+tracing-subscriber.workspace = true

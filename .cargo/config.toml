@@ -1,0 +1,40 @@
+# FlowDictate build configuration
+# Security hardening flags for release builds
+
+[profile.release]
+# Enable link-time optimization for smaller, faster binaries
+lto = true
+# Single codegen unit for maximum optimization (slower compile, better output)
+codegen-units = 1
+# Strip debug symbols from release binaries
+strip = "symbols"
+# Abort on panic rather than unwinding (prevents information leakage in panics)
+panic = "abort"
+# Enable overflow checks even in release builds (security > performance)
+overflow-checks = true
+# Optimization level
+opt-level = 3
+
+[profile.release.build-override]
+opt-level = 3
+
+[profile.dev]
+# Keep overflow checks in debug builds
+overflow-checks = true
+
+# Target-specific hardening
+# Windows: ASLR and DEP are enabled by default with MSVC
+# Linux: stack protector and RELRO via linker flags
+# macOS: hardened runtime via codesign
+
+[target.'cfg(target_os = "linux")']
+rustflags = [
+    "-C", "link-arg=-Wl,-z,relro,-z,now",  # Full RELRO
+    "-C", "link-arg=-Wl,-z,noexecstack",     # Non-executable stack
+]
+
+[target.'cfg(target_os = "macos")']
+rustflags = []
+
+[target.'cfg(target_os = "windows")']
+rustflags = []

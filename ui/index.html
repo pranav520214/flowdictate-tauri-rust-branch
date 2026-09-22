@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowDictate</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="overlay" class="overlay" data-state="idle">
+        <!-- State indicator -->
+        <div class="state-indicator">
+            <div class="state-dot"></div>
+            <span class="state-label">Ready</span>
+        </div>
+
+        <!-- Waveform canvas (real mic levels, not decorative) -->
+        <canvas id="waveform" class="waveform" width="200" height="40"></canvas>
+
+        <!-- Partial transcript display -->
+        <div id="transcript" class="transcript"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
