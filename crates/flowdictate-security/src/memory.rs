@@ -17,7 +17,7 @@
 //! Wrap sensitive byte buffers in [`SensitiveBuffer`] to ensure they are cleared
 //! when dropped. Use [`SensitiveString`] for text data like transcripts.
 
-use zeroize::{Zeroize, ZeroizeOnDrop};
+use zeroize::ZeroizeOnDrop;
 
 /// A byte buffer that is zeroized when dropped.
 ///

@@ -1,60 +1,112 @@
-//! # Nemotron ASR Engine
+//! # ASR Engine Interface
 //!
-//! Integrates ONNX Runtime (`ort`) to run NVIDIA Nemotron Cache-Aware FastConformer-RNNT models.
+//! Defines the abstract `Recognizer` trait that all ASR backends implement.
+//!
+//! ## Trust Boundary
+//!
+//! The `Recognizer` trait is the trust boundary between the core pipeline
+//! and the native ASR runtime. Implementations may communicate with an
+//! out-of-process worker (process isolation) or wrap an in-process FFI
+//! binding (with documented compensating controls per §4).
+//!
+//! ## Architecture
+//!
+//! ```text
+//! Primary:   NemotronRecognizer → NeMo-Speech.cpp (via IPC or FFI)
+//! Fallback:  NoopRecognizer     → returns empty (for testing / degradation)
+//! ```
 
-use std::path::Path;
-use ndarray::{Array2, Array3};
-use ort::{Session, SessionOutputs};
+use crate::transcript::TranscriptEvent;
 use thiserror::Error;
 
+/// Errors from ASR engine operations.
 #[derive(Debug, Error)]
 pub enum AsrError {
-    #[error("ONNX Runtime error: {0}")]
-    OrtError(#[from] ort::Error),
-    #[error("Model load failed: {0}")]
-    ModelLoad(String),
-    #[error("Inference failed: {0}")]
-    Inference(String),
+    #[error("model not loaded")]
+    ModelNotLoaded,
+
+    #[error("model verification failed")]
+    ModelVerificationFailed,
+
+    #[error("inference failed: {reason}")]
+    InferenceFailed { reason: String },
+
+    #[error("worker process crashed")]
+    WorkerCrashed,
+
+    #[error("worker communication timeout")]
+    WorkerTimeout,
+
+    #[error("transcript validation failed")]
+    InvalidTranscript,
+
+    #[error("backend unavailable: {backend}")]
+    BackendUnavailable { backend: String },
 }
 
-/// The Nemotron streaming ASR engine.
-pub struct NemotronEngine {
-    session: Session,
-    // Cached state for the FastConformer encoder
-    cache_state: Option<Array3<f32>>,
+/// Abstract speech recognition interface.
+///
+/// Implementations must:
+/// - Validate all output from native runtimes before returning
+/// - Handle native runtime crashes without panicking
+/// - Bound all returned transcript text per §17
+/// - Never access the network
+pub trait Recognizer: Send {
+    /// Feed a chunk of mono 16kHz f32 audio to the recognizer.
+    ///
+    /// Returns zero or more transcript events. Partial events may
+    /// update the UI; only Committed/Final events are authoritative.
+    ///
+    /// The chunk size is determined by the audio pipeline (typically
+    /// 30ms = 480 samples at 16kHz).
+    fn feed_audio(&mut self, chunk: &[f32]) -> Result<Vec<TranscriptEvent>, AsrError>;
+
+    /// Reset the recognizer state for a new utterance.
+    fn reset(&mut self);
+
+    /// Returns true if the recognizer has a model loaded and is ready.
+    fn is_ready(&self) -> bool;
 }
 
-impl NemotronEngine {
-    /// Loads a Nemotron ONNX model from the specified path.
-    pub fn new<P: AsRef<Path>>(model_path: P) -> Result<Self, AsrError> {
-        let session = Session::builder()?
-            .with_intra_threads(4)?
-            .commit_from_file(model_path.as_ref())?;
+/// No-op recognizer for testing and graceful degradation.
+///
+/// Returns no transcript events. The application remains functional
+/// (hotkey works, UI displays, injection path works) but produces
+/// no speech recognition output.
+pub struct NoopRecognizer;
 
-        Ok(Self {
-            session,
-            cache_state: None, // Will be initialized on first audio chunk
-        })
+impl Recognizer for NoopRecognizer {
+    fn feed_audio(&mut self, _chunk: &[f32]) -> Result<Vec<TranscriptEvent>, AsrError> {
+        Ok(Vec::new())
     }
 
-    /// Processes a chunk of audio features (e.g., log-mel spectrogram) and returns decoded text tokens.
-    /// In a real implementation, this processes ~80ms chunks of audio features,
-    /// feeds them along with `cache_state` to the ONNX session, and decodes the RNNT output.
-    pub fn process_chunk(&mut self, audio_features: &Array2<f32>) -> Result<String, AsrError> {
-        // Placeholder for actual ONNX tensor creation and execution.
-        // A complete implementation would:
-        // 1. Convert audio_features to ort::Value.
-        // 2. Pass cache_state to ort::Value (or zeros if None).
-        // 3. Run the session.
-        // 4. Extract the RNNT token emissions and new cache_state.
-        // 5. Decode tokens to string using a BPE tokenizer.
-        
-        // This is a stub for architecture redesign purposes.
-        Ok(String::new())
+    fn reset(&mut self) {}
+
+    fn is_ready(&self) -> bool {
+        false
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn noop_recognizer_returns_empty() {
+        let mut r = NoopRecognizer;
+        let events = r.feed_audio(&[0.0; 480]).unwrap();
+        assert!(events.is_empty());
     }
 
-    /// Resets the internal cache state (e.g., at the end of an utterance).
-    pub fn reset_state(&mut self) {
-        self.cache_state = None;
+    #[test]
+    fn noop_recognizer_is_not_ready() {
+        let r = NoopRecognizer;
+        assert!(!r.is_ready());
+    }
+
+    #[test]
+    fn noop_recognizer_reset_is_safe() {
+        let mut r = NoopRecognizer;
+        r.reset(); // Must not panic
     }
 }

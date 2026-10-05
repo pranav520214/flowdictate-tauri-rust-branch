@@ -1,21 +1,25 @@
 //! # flowdictate-asr
 //!
-//! Streaming automatic speech recognition using whisper.cpp.
+//! Abstract speech recognition interface for FlowDictate.
 //!
-//! This crate wraps `whisper-rs` to provide:
+//! ## Architecture (§5)
 //!
-//! - **Streaming transcription** — live partial hypotheses as the user speaks
-//! - **Consensus commit** — stable text separated from unstable hypotheses
-//! - **Model integrity** — delegates to `flowdictate-security` for SHA-256 verification
-//! - **Bounded decoding** — rolling window prevents unbounded memory growth
+//! This crate defines:
+//! - The `Recognizer` trait — abstract ASR interface
+//! - `TranscriptEvent` — streaming event protocol (Partial/Committed/Final)
+//! - `NoopRecognizer` — degradation fallback
+//!
+//! The actual NeMo-Speech.cpp integration lives in the ASR worker process,
+//! not in this crate. This separation maintains the trust boundary between
+//! the Rust core and the native C++ inference runtime.
 //!
 //! ## Pipeline Position
 //!
 //! ```text
 //! [flowdictate-audio: VAD speech frames]
-//!     → Rolling ASR Window
-//!     → Partial Hypotheses (sent to UI overlay)
-//!     → Consensus Commit (stable text)
+//!     → Recognizer::feed_audio()
+//!     → TranscriptEvent::Partial (UI overlay)
+//!     → TranscriptEvent::Committed/Final (refinement pipeline)
 //!     → [flowdictate-refine: text cleanup]
 //! ```
 //!
@@ -24,7 +28,10 @@
 //! Models are NEVER loaded without passing the integrity gate:
 //! `flowdictate-security::model_integrity::verify_model_file()`
 
-pub mod consensus;
 pub mod engine;
+pub mod transcript;
+
+// These modules retain their existing stub documentation for future work.
+pub mod consensus;
 pub mod model;
 pub mod streaming;

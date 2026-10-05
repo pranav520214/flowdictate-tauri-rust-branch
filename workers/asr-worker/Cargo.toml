@@ -1,0 +1,16 @@
+[package]
+name = "asr-worker"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Isolated NeMo-Speech.cpp worker process for FlowDictate"
+
+[dependencies]
+flowdictate-runtime = { path = "../../crates/flowdictate-runtime" }
+flowdictate-security = { path = "../../crates/flowdictate-security" }
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true
+tracing-subscriber.workspace = true
+
+# Will add NeMo-Speech-sys bindings later once compiled/linked

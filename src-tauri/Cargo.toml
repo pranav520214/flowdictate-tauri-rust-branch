@@ -15,9 +15,11 @@ serde.workspace = true
 serde_json.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
-reqwest = { version = "0.12", features = ["stream", "rustls-tls"], default-features = false }
-tokio = { version = "1", features = ["full"] }
 
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
+
+# NOTE: No HTTP client (reqwest, hyper, curl) is present in this crate.
+# NOTE: No async runtime (tokio) is present — Tauri manages its own.
+# NOTE: No network capability exists in the dictation pipeline.

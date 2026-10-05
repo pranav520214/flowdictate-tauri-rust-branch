@@ -9,6 +9,7 @@ description = "Core pipeline orchestrator for FlowDictate"
 flowdictate-audio = { path = "../flowdictate-audio" }
 flowdictate-asr = { path = "../flowdictate-asr" }
 flowdictate-refine = { path = "../flowdictate-refine" }
+flowdictate-runtime = { path = "../flowdictate-runtime" }
 flowdictate-inject = { path = "../flowdictate-inject" }
 flowdictate-storage = { path = "../flowdictate-storage" }
 flowdictate-security = { path = "../flowdictate-security" }

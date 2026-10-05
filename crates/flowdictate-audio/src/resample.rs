@@ -4,7 +4,7 @@
 //! to 16kHz, which is the required format for whisper.cpp.
 
 use rubato::{
-    SincInterpolationParameters, SincInterpolationType, Resampler, SincFixedIn, WindowFunction,
+    Resampler, SincFixedIn, SincInterpolationParameters, SincInterpolationType, WindowFunction,
 };
 use thiserror::Error;
 

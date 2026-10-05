@@ -14,7 +14,7 @@
 //! Before loading a model file, importing a profile, or writing any file based
 //! on user-provided names, validate the path through this module.
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use thiserror::Error;
 
 /// Errors from path validation.

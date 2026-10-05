@@ -5,17 +5,9 @@ edition.workspace = true
 license.workspace = true
 description = "Text refinement pipeline for FlowDictate: deterministic cleanup + optional local LLM"
 
-[features]
-default = []
-# Enable local LLM refinement via llama.cpp (Stage B)
-# Only needed when deterministic cleanup (Stage A) is insufficient
-llm = ["dep:llama-cpp-2"]
-
 [dependencies]
 flowdictate-security = { path = "../flowdictate-security" }
+flowdictate-runtime = { path = "../flowdictate-runtime" }
 thiserror.workspace = true
 tracing.workspace = true
 serde.workspace = true
-
-# Optional: local LLM refinement (behind feature flag)
-llama-cpp-2 = { workspace = true, optional = true }

@@ -10,7 +10,10 @@
 //! - **Overflow Policy**: When the buffer is full, the oldest samples are dropped
 //!   to make room for new ones. The audio callback thread is NEVER blocked.
 
-use ringbuf::{traits::{Consumer, Producer, Split, Observer}, HeapRb};
+use ringbuf::{
+    traits::{Consumer, Observer, Producer, Split},
+    HeapRb,
+};
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -22,7 +25,12 @@ pub enum RingBufferError {
 /// Creates a new bounded SPSC ring buffer for audio samples.
 ///
 /// Returns a producer (for the audio callback) and a consumer (for the processor thread).
-pub fn create_audio_ring_buffer(capacity: usize) -> (AudioProducer<impl Producer<Item = f32>>, AudioConsumer<impl Consumer<Item = f32>>) {
+pub fn create_audio_ring_buffer(
+    capacity: usize,
+) -> (
+    AudioProducer<impl Producer<Item = f32>>,
+    AudioConsumer<impl Consumer<Item = f32>>,
+) {
     let rb = HeapRb::<f32>::new(capacity);
     let (prod, cons) = rb.split();
     (AudioProducer { inner: prod }, AudioConsumer { inner: cons })
@@ -78,7 +86,7 @@ mod tests {
     fn test_ring_buffer_basic() {
         let (mut prod, mut cons) = create_audio_ring_buffer(10);
         prod.push_slice_overwrite(&[1.0, 2.0, 3.0]);
-        
+
         assert_eq!(cons.available(), 3);
         let mut out = [0.0; 5];
         let read = cons.pop_slice(&mut out);

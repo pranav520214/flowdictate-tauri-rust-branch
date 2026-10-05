@@ -38,9 +38,10 @@
 //!
 //! Never falls back to a cloud service.
 
+pub mod commands;
 pub mod deterministic;
 pub mod dictionary;
-#[cfg(feature = "llm")]
 pub mod llm;
 pub mod router;
 pub mod sanitize;
+pub mod verifier;

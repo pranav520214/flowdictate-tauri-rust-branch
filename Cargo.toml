@@ -5,9 +5,12 @@ members = [
     "crates/flowdictate-audio",
     "crates/flowdictate-asr",
     "crates/flowdictate-refine",
+    "crates/flowdictate-runtime",
     "crates/flowdictate-inject",
     "crates/flowdictate-storage",
     "crates/flowdictate-security",
+    "workers/asr-worker",
+    "workers/refine-worker",
     "src-tauri",
 ]
 
@@ -28,12 +31,13 @@ serde_json = "1.0"
 thiserror = "2.0"
 anyhow = "1.0"
 
-# Logging (NEVER log transcripts, audio, or secrets)
+# Logging (NEVER log transcripts, audio, prompts, or secrets — §15)
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 # Security primitives
 sha2 = "0.10"
+subtle = "2.6"
 zeroize = { version = "1.9", features = ["derive"] }
 hex = "0.4"
 
@@ -49,10 +53,7 @@ hound = "3.5.1"
 # VAD
 webrtc-vad = "0.4.0"
 
-# ASR — whisper.cpp bindings
-whisper-rs = "0.16.0"
-
-# LLM refinement — llama.cpp bindings (optional)
+# LLM refinement — llama.cpp bindings (feature-gated)
 llama-cpp-2 = "0.1.154"
 
 # Database — SQLCipher encrypted SQLite
@@ -71,6 +72,29 @@ global-hotkey = "0.6.1"
 tauri = { version = "2", features = [] }
 tauri-build = "2"
 
-# NOTE: No HTTP client (reqwest, hyper, curl) is included.
-# NOTE: No analytics, telemetry, or advertising SDK is included.
-# NOTE: No async runtime (tokio) is included — dedicated threads + crossbeam instead.
+# System information (for memory governor)
+sysinfo = "0.33"
+
+# Windows native API bindings (dynamic library loading, no LLVM/bindgen required)
+windows-sys = { version = "0.59", features = ["Win32_System_LibraryLoader", "Win32_Foundation"] }
+
+# Testing utilities
+tempfile = "3.14"
+
+# ──────────────────────────────────────────────────────────────
+# SECURITY INVARIANTS — verified by audit and CI:
+#
+# 1. No HTTP client (reqwest, hyper, curl, ureq) exists in any
+#    workspace member. The normal dictation pipeline NEVER requires
+#    network capability.
+#
+# 2. No analytics, telemetry, or advertising SDK is included.
+#
+# 3. No async runtime (tokio) is included in application crates.
+#    Tauri manages its own async runtime internally.
+#    All pipeline threading uses dedicated OS threads + crossbeam.
+#
+# 4. ASR runtime: NeMo-Speech.cpp (C API, linked via build script)
+#    Refiner runtime: llama.cpp (via llama-cpp-2, feature-gated)
+#    Both are treated as UNTRUSTED components per §4.
+# ──────────────────────────────────────────────────────────────
